@@ -26,3 +26,8 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 vim.keymap.set('n', '<leader>h', ':nohlsearch<CR>')
 vim.wo.number = true
 
+-- Improve performance
+vim.opt.updatetime = 100  -- Faster completion
+vim.opt.timeoutlen = 300  -- Faster key sequence completion
+vim.opt.redrawtime = 1500 -- Allow more time for loading syntax on large files
+
