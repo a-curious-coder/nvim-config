@@ -73,6 +73,41 @@ The following tools are automatically installed via Mason:
 - Leader+gr - Find references
 - Leader+ca - Code actions
 
+## Verifying LSP Status
+
+You can verify that LSP servers are running and attached to your files using these methods:
+
+1. Check active LSP servers for current buffer:
+   ```
+   :LspInfo
+   ```
+
+2. View LSP logs:
+   ```
+   :LspLog
+   ```
+
+3. Check Mason-installed servers:
+   ```
+   :Mason
+   ```
+
+4. Quick LSP status check:
+   - Type `K` on any symbol - if documentation appears, LSP is working
+   - Type `gd` on a symbol - if it jumps to definition, LSP is working
+   - Look for diagnostics (error/warning squiggles) - indicates active LSP
+
+5. View attached LSP clients in lua:
+   ```
+   :lua print(vim.inspect(vim.lsp.get_active_clients()))
+   ```
+
+Common issues if LSP isn't working:
+- Required language server not installed (use `:Mason` to install)
+- Missing project-specific config files (e.g., `.rubocop.yml` for Ruby)
+- LSP server executable not in PATH
+- Syntax errors in configuration files
+
 ## Customization
 
 The configuration is modular and organized in the lua/plugins directory. Each plugin has its own configuration file that can be modified according to your preferences.
