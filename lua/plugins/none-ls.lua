@@ -107,7 +107,7 @@ function M.config()
 	})
 
 	-- Format keybinding
-	vim.keymap.set("n", "<leader>gf", vim.lsp.buf.format, {
+	vim.keymap.set("n", "<leader>f", vim.lsp.buf.format, {
 		desc = "Format file",
 		silent = true,
 	})
