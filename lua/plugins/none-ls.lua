@@ -9,40 +9,22 @@ local M = {
 function M.config()
 	local null_ls = require("null-ls")
 
-	-- Simple configuration focused on core functionality
+	-- Configuration for none-ls (null-ls) providing formatting and diagnostics
 	null_ls.setup({
 		sources = {
-			-- Lua formatting
+			-- Lua formatting using stylua
 			null_ls.builtins.formatting.stylua,
 
-			-- Ruby/Rails linting and formatting
+			-- Ruby/Rails linting with erb-lint (requires .erb_lint.yml config file)
 			null_ls.builtins.diagnostics.erb_lint.with({
 				condition = function(utils)
 					return utils.root_has_file({ ".erb_lint.yml" })
 				end,
 			}),
 
-			-- Rubocop with bundler support
-			null_ls.builtins.diagnostics.rubocop.with({
-				command = "bundle",
-				args = vim.fn.executable("bundle") == 1 and {
-					"exec",
-					"rubocop",
-					"--format",
-					"json",
-					"--force-exclusion",
-					"--stdin",
-					"$FILENAME",
-				} or nil,
-				runtime_condition = function()
-					return vim.fn.filereadable("Gemfile") == 1
-				end,
-				stderr = true,
-				format = "json",
-			}),
-
+			-- Rubocop auto-correction configuration
 			null_ls.builtins.formatting.rubocop.with({
-				command = "bundle",
+				command = vim.fn.executable("bundle") == 1 and "bundle" or "rubocop",
 				args = vim.fn.executable("bundle") == 1 and {
 					"exec",
 					"rubocop",
@@ -50,40 +32,41 @@ function M.config()
 					"--force-exclusion",
 					"--stdin",
 					"$FILENAME",
-					"--stderr",
-				} or nil,
-				runtime_condition = function()
-					return vim.fn.filereadable("Gemfile") == 1
-				end,
+				} or {
+					"--auto-correct-all",
+					"--force-exclusion",
+					"--stdin",
+					"$FILENAME",
+				},
 				to_stdin = true,
-				to_temp_file = true,
 			}),
 
-			-- Code smell detection
+			-- Ruby code smell detection using reek
 			null_ls.builtins.diagnostics.reek,
 
-			-- Python type checking
+			-- Python static type checking
 			null_ls.builtins.diagnostics.mypy,
 
-			-- Web formatting
+			-- Web-related file formatting using prettier
 			null_ls.builtins.formatting.prettier.with({
 				filetypes = { "html", "json", "yaml", "markdown", "eruby" },
 			}),
 		},
 
-		-- Format on save with performance optimization
+		-- Format on save with file size check to prevent performance issues
 		on_attach = function(client, bufnr)
 			if client.supports_method("textDocument/formatting") then
 				vim.api.nvim_create_autocmd("BufWritePre", {
 					buffer = bufnr,
 					callback = function()
-						-- Skip large files to avoid performance issues
-						local max_size = 100 * 1024 -- 100KB
+						-- Skip formatting for files larger than 100KB
+						local max_size = 100 * 1024
 						local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(bufnr))
 						if ok and stats and stats.size > max_size then
 							return
 						end
 
+						-- Format using null-ls with a 2 second timeout
 						vim.lsp.buf.format({
 							async = false,
 							timeout_ms = 2000,
@@ -97,16 +80,16 @@ function M.config()
 			end
 		end,
 
-		-- Minimal debug settings
-		debug = false,
-		diagnostics_format = "#{m}",
+		-- Debug and diagnostic settings
+		debug = false, -- Disable debug mode for production
+		diagnostics_format = "#{m}", -- Simple message format
 		fallback_severity = vim.diagnostic.severity.HINT,
-		log_level = "warn",
-		stdout = false,
-		stderr = false,
+		log_level = "warn", -- Only log warnings and errors
+		stdout = false, -- Disable stdout logging
+		stderr = false, -- Disable stderr logging
 	})
 
-	-- Format keybinding
+	-- Add keybinding for manual formatting
 	vim.keymap.set("n", "<leader>f", vim.lsp.buf.format, {
 		desc = "Format file",
 		silent = true,
