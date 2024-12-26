@@ -35,6 +35,7 @@
   "snacks.nvim": { "branch": "main", "commit": "41d2c7b6a5d75c2063ee8398c3e0fb5e467e9c46" },
   "swagger-preview.nvim": { "branch": "master", "commit": "9b9bc21096890a1bd0f221a940d04dbab87a38aa" },
   "telescope-dap.nvim": { "branch": "master", "commit": "783366bd6c1e7fa0a5c59c07db37f49c805a28df" },
+  "telescope-recent-files": { "branch": "main", "commit": "3a7a1b9c6b52b6ff7938c59f64c87a05e013dff8" },
   "telescope-ui-select.nvim": { "branch": "master", "commit": "6e51d7da30bd139a6950adf2a47fda6df9fa06d2" },
   "telescope.nvim": { "branch": "master", "commit": "d90956833d7c27e73c621a61f20b29fdb7122709" },
   "vim-fugitive": { "branch": "master", "commit": "fcb4db52e7f65b95705aa58f0f2df1312c1f2df2" },

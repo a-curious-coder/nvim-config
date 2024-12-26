@@ -1,7 +1,7 @@
 return {
 	{
 		"nvim-telescope/telescope-ui-select.nvim",
-		-- This extension replaces the built-in vim.ui.select with telescope
+		"smartpde/telescope-recent-files",
 	},
 	{
 		"nvim-telescope/telescope.nvim",
@@ -38,6 +38,7 @@ return {
 
 			-- Load extensions
 			telescope.load_extension("ui-select")
+			telescope.load_extension("recent_files")
 
 			-- Keymaps
 			local builtin = require("telescope.builtin")
@@ -48,6 +49,7 @@ return {
 				local word = vim.fn.expand("<cword>")
 				builtin.grep_string({ search = word })
 			end, { desc = "Find files tracked by git" })
+
 			vim.keymap.set("n", "<leader>pWs", function()
 				local word = vim.fn.expand("<cWORD>")
 				builtin.grep_string({ search = word })
@@ -56,6 +58,14 @@ return {
 			vim.keymap.set("n", "<leader>ps", function()
 				builtin.grep_string({ search = vim.fn.input("Grep > ") })
 			end)
+
+			vim.api.nvim_set_keymap(
+				"n",
+				"<Leader><Leader>",
+				[[<cmd>lua require('telescope').extensions.recent_files.pick()<CR>]],
+				{ noremap = true, silent = true }
+			)
+
 			vim.keymap.set("n", "<leader>vh", builtin.help_tags, { desc = "Help tags" })
 		end,
 	},

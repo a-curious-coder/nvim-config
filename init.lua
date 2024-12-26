@@ -10,8 +10,6 @@ if not vim.loop.fs_stat(lazypath) then
 	})
 end
 vim.opt.rtp:prepend(lazypath)
-vim.opt.showtabline = 2 -- Always show tabs
-vim.wo.relativenumber = true
 require("vim-options")
 require("lazy").setup("plugins", {
 	debug = true,
