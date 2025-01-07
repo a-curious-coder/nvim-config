@@ -35,7 +35,7 @@ return {
 			vim.keymap.set("n", "<leader>" .. i, "<Cmd>BufferGoto " .. i .. "<CR>", opts)
 		end
 
-		vim.keymap.set("n", "<leader>bd", "<Cmd>BufferDelete<CR>", opts) -- Delete current buffer
+		vim.keymap.set("n", "<leader>bc", "<Cmd>BufferDelete<CR>", opts) -- Delete current buffer
 		vim.keymap.set("n", "<leader>bl", "<Cmd>BufferLast<CR>", opts) -- Go to last buffer
 
 		-- Move buffers left or right (optional)

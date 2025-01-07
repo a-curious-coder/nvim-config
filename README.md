@@ -52,6 +52,7 @@ The following tools are automatically installed via Mason:
 - Ctrl+p - Find files (git)
 - Leader+pf - Find files (all)
 - Leader+ps - Live grep
+- Highlight word; `viw`
 
 ### Ruby/Rails Specific
 - gd - Go to definition
@@ -108,19 +109,17 @@ Common issues if LSP isn't working:
 - LSP server executable not in PATH
 - Syntax errors in configuration files
 
-## Customization
+## Customisation
 
 The configuration is modular and organized in the lua/plugins directory. Each plugin has its own configuration file that can be modified according to your preferences.
 
 ## Required Ruby Gems
 
 To ensure full functionality, install these gems globally:
-- solargraph
 - ruby-lsp
 - rubocop
-- erb_lint
-- rails_best_practices
 - reek
+- lua-language-server
 
 ## Troubleshooting
 
@@ -130,11 +129,3 @@ If you encounter issues:
 2. Run :checkhealth in Neovim
 3. Ensure all prerequisites are installed
 4. Try removing the plugin cache from ~/.local/share/nvim
-
-## Contributing
-
-Feel free to submit issues and enhancement requests!
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.

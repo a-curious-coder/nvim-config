@@ -1,76 +1,50 @@
+local utils = require("lsp.utils")
+local keymaps = require("lsp.keymaps")
+local servers = require("lsp.servers")
+
 return {
 	{
 		"williamboman/mason.nvim",
-		lazy = false,
+		event = { "BufReadPre", "BufNewFile" },
 		config = function()
 			require("mason").setup()
 		end,
 	},
 	{
 		"williamboman/mason-lspconfig.nvim",
-		lazy = false,
+		event = { "BufReadPre", "BufNewFile" },
 		opts = {
 			auto_install = true,
 		},
 	},
 	{
 		"neovim/nvim-lspconfig",
-		lazy = false,
+		event = { "BufReadPre", "BufNewFile" },
 		config = function()
 			local capabilities = require('cmp_nvim_lsp').default_capabilities()
-
 			local lspconfig = require("lspconfig")
 
-			-- Function to notify when LSP attaches
+			-- Enhanced on_attach function
 			local on_attach = function(client, bufnr)
-				vim.notify(string.format("LSP %s is ready!", client.name), vim.log.levels.INFO)
+				utils.notify_lsp_status(client, bufnr)
+				keymaps.setup(bufnr)
 			end
 
 			-- Setup LSP servers
-			lspconfig.html.setup({
-				capabilities = capabilities,
-				on_attach = on_attach
-			})
-			lspconfig.jsonls.setup({
-				capabilities = capabilities,
-				on_attach = on_attach
-			})
-			lspconfig.lua_ls.setup({
-				capabilities = capabilities,
-				on_attach = on_attach
-			})
-			lspconfig.pyright.setup({
-				capabilities = capabilities,
-				on_attach = on_attach
-			})
-			lspconfig.pylsp.setup({
-				capabilities = capabilities,
-				on_attach = on_attach
-			})
-			lspconfig.ruby_lsp.setup({
-				capabilities = capabilities,
-				cmd = { "ruby-lsp" },
-				on_attach = on_attach,
-				settings = {
-					rubocop = {
-						enable = true,  -- Enable RuboCop integration
-						lint = true,    -- Enable linting
-						format = true   -- Enable formatting
-					}
-				}
-			})
-			lspconfig.tailwindcss.setup({
-				capabilities = capabilities,
-				on_attach = on_attach
-			})
+			for server_name, config in pairs(servers.server_configs) do
+				config.capabilities = capabilities
+				config.on_attach = on_attach
+				lspconfig[server_name].setup(config)
+			end
 
-			-- Keymaps
-			vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
-			vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, {})
-			vim.keymap.set("n", "<leader>gr", vim.lsp.buf.references, {})
-			vim.keymap.set("n", "<leader>f", vim.lsp.buf.format, {})
-			vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, {})
-			vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, {})
+			-- Add status line component
+			vim.api.nvim_create_autocmd("LspAttach", {
+				callback = function(args)
+					local bufnr = args.buf
+					local client = vim.lsp.get_client_by_id(args.data.client_id)
+					vim.b[bufnr].lsp_status = string.format("LSP: %s", client.name)
+				end,
+			})
 		end,
 	},
 }

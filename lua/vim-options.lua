@@ -35,3 +35,5 @@ vim.wo.number = true
 vim.opt.updatetime = 100 -- Faster completion
 vim.opt.timeoutlen = 300 -- Faster key sequence completion
 vim.opt.redrawtime = 1500 -- Allow more time for loading syntax on large files
+-- views can only be fully collapsed with the global statusline
+vim.opt.laststatus = 3
